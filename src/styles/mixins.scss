@@ -1,0 +1,13 @@
+@mixin custom-hover($field, $action) {
+  @media(hover:hover) {
+    &:hover {
+      #{$field}: #{$action};
+    }
+  }
+
+  @media(hover:none) {
+    &:active {
+      #{$field}: #{$action};
+    }
+  }
+}

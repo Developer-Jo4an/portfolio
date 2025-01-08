@@ -1,0 +1,75 @@
+body {
+  width: 100vw;
+  min-height: 100vh;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.main-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+.main-menu__scene-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.main-menu__options-buttons {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.main-menu__option-button {
+  width: 50px;
+  height: 50px;
+  transition: 0.3s transform;
+}
+.main-menu__option-button img {
+  width: 100%;
+  height: 100%;
+}
+.main-menu__option-button:hover {
+  transform: scale(1.2);
+}
+.main-menu__play-button {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: 0.3s transform;
+  width: 160px;
+}
+.main-menu__play-button img {
+  width: 100%;
+  height: 100%;
+}
+@media (hover: hover) {
+  .main-menu__play-button:hover {
+    transform: translateX(-50%) scale(1.2);
+  }
+}
+@media (hover: none) {
+  .main-menu__play-button:active {
+    transform: translateX(-50%) scale(1.2);
+  }
+}
+
+/*# sourceMappingURL=general.css.map */
