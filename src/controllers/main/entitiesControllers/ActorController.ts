@@ -1,8 +1,7 @@
 import {BaseEntityController, BaseEntityProps} from "./BaseEntityController.ts";
+import {MainFactory} from "../MainFactory.ts";
 
 export class ActorController extends BaseEntityController {
-  actor: THREE.Mesh;
-
   constructor(data: BaseEntityProps) {
     super(data);
 
@@ -10,16 +9,12 @@ export class ActorController extends BaseEntityController {
   }
 
   init(): void {
-    const actor: THREE.Mesh = ((): THREE.Mesh => {
-      const geometry: THREE.BoxGeometry = new THREE.BoxGeometry();
-      const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({color: "red"});
-      return new THREE.Mesh(geometry, material);
-    })();
+    type ActorType = ReturnType<typeof MainFactory.getEntity>
+    const actor: ActorType = MainFactory.getEntity("actor");
+    this.scene.add(actor);
+  }
 
-    actor.name = "actor";
+  update(deltaTime: number): void {
 
-    actor.position.set(0, 0.5, 0);
-
-    this.scene.add(this.actor = actor);
   }
 }

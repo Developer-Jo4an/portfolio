@@ -25,8 +25,6 @@ export const useScene = (type: SceneType, container: HTMLDivElement | null) => {
 
     const wrapperInstance: WrapperType = new WrapperCls(container);
 
-    wrapperInstance.addCanvas();
-
     setWrapper(wrapperInstance);
   }, [type, isLoaded, container]);
 
@@ -37,7 +35,7 @@ export const useScene = (type: SceneType, container: HTMLDivElement | null) => {
       const GSAP = await import("gsap");
       window.THREEAddons = THREEAddons;
       window.THREE = THREE;
-      window.GSAP = GSAP;
+      window.GSAP = GSAP.gsap;
       setIsLoaded(true);
     })();
   }, []);

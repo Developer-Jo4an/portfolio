@@ -1,3 +1,6 @@
+import {PreloadData, preloadData} from "./main/preload.ts";
+import {AssetsManager} from "./AssetsManager.ts";
+
 export interface BaseControllerInterface {
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
@@ -5,7 +8,7 @@ export interface BaseControllerInterface {
   canvas: HTMLCanvasElement;
   container: HTMLDivElement;
 
-  init(): void;
+  init(): Promise<void>;
 
   update(deltaTime: number): void;
 
@@ -26,17 +29,23 @@ export class BaseController implements BaseControllerInterface {
     this.container = container;
 
     this.init();
-
-    window.addEventListener("resize", this.resize);
-
-    this.resize();
   }
 
-  init(): void {
+  async init(): Promise<void> {
+    AssetsManager.createLoaders(preloadData);
+
+    await Promise.all(preloadData.map((obj: PreloadData) => AssetsManager.loadEntity(obj)));
+
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer();
     this.canvas = this.renderer.domElement;
+
+    window.addEventListener("resize", this.resize);
+
+    this.resize();
+
+    this.container.appendChild(this.canvas);
   }
 
   update(deltaTime: number): void {
