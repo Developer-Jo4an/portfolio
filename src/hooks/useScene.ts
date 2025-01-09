@@ -33,6 +33,7 @@ export const useScene = (type: SceneType, container: HTMLDivElement | null): {
     setWrapper(wrapperInstance);
   }, [type, isLoaded, container]);
 
+  //todo: declare
   useEffect((): void => {
     (async (): Promise<void> => {
       const THREE = await import("three");
