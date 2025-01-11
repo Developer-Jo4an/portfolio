@@ -37,7 +37,7 @@ export class AssetsManager {
         const fileName: string = splitPath[splitPath.length - 1];
         const basePath: string = `${splitPath.slice(0, splitPath.length - 1).join("/")}/`;
         AssetsManager.loaders[type].setPath(basePath);
-        return new Promise(res => {
+        return new Promise((res): void => {
           AssetsManager.loaders[type].load(fileName, gltf => res(gltf.scene));
         });
       }
@@ -65,6 +65,7 @@ export class AssetsManager {
 
     preloadData.forEach((data: PreloadData) => {
       if (loaders.hasOwnProperty(data.type)) return;
+
       loaders[data.type] = new Loaders[data.type]();
     });
 

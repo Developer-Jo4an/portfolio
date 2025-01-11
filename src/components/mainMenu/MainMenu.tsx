@@ -1,6 +1,7 @@
-import React, {useEffect, useMemo, useRef} from "react";
+import React, {useMemo, useRef} from "react";
 import Button from "../baseComponents/button/Button.tsx";
 import {useScene} from "../../hooks/useScene.ts";
+import {useStateControls} from "../../hooks/useStateControls.ts";
 
 const mainMenuCopyright = {
   optionsButtons: [
@@ -24,28 +25,25 @@ const mainMenuCopyright = {
 
 const MainMenu = () => {
   const sceneRef = useRef<HTMLDivElement | null>(null);
+  const {setState} = useStateControls();
 
   const {optionsButtons, playButton} = mainMenuCopyright;
 
   const buttonCallbacks = useMemo(
     (): { [key: string]: () => void } => ({
-      settings: () => {
+      settings: (): void => {
         console.log("settings");
       },
-      sound: () => {
+      sound: (): void => {
         console.log("sound");
       },
-      play: () => {
-        console.log("play");
+      play: (): void => {
+        setState("game");
       }
     }),
     []);
 
-  useEffect((): void => {
-
-  }, []);
-
-  useScene("main", sceneRef.current)
+  useScene("main", sceneRef.current);
 
   return (
     <div className={"main-menu"}>

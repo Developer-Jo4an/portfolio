@@ -1,13 +1,15 @@
 import {useEffect, useState} from "react";
 import {MainWrapper} from "../controllers/main/MainWrapper.ts";
+import {GameWrapper} from "../controllers/game/GameWrapper.ts";
 
 type SceneType = "main" | "game"
 
 type Wrappers = {
   main: typeof MainWrapper;
+  game: typeof GameWrapper;
 }
 
-export const useScene = (type: SceneType, container: HTMLDivElement | null) => {
+export const useScene = (type: SceneType, container: HTMLDivElement | null): {wrapper: GameWrapper | MainWrapper | null} => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   type WrapperType = InstanceType<Wrappers[SceneType]>;
@@ -18,7 +20,8 @@ export const useScene = (type: SceneType, container: HTMLDivElement | null) => {
     if (!isLoaded || !container) return;
 
     const wrappers: Wrappers = {
-      main: MainWrapper
+      main: MainWrapper,
+      game: GameWrapper
     };
 
     const WrapperCls: Wrappers[SceneType] = wrappers[type];
@@ -33,9 +36,11 @@ export const useScene = (type: SceneType, container: HTMLDivElement | null) => {
       const THREE = await import("three");
       const THREEAddons = await import("three/addons");
       const GSAP = await import("gsap");
+
       window.THREEAddons = THREEAddons;
       window.THREE = THREE;
       window.GSAP = GSAP.gsap;
+
       setIsLoaded(true);
     })();
   }, []);
