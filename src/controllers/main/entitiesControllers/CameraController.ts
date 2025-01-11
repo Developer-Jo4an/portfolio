@@ -42,9 +42,7 @@ export class CameraController extends BaseEntityController {
   setOrbitControls(e: MouseEvent | TouchEvent): void {
     if (!this.isFlyingCamera) return;
 
-    const evTypesLogic: {
-      [key: "mousemove" | "touchmove"]: () => boolean
-    } = {
+    const evTypesLogic: { [key: "mousemove" | "touchmove"]: () => boolean } = {
       touchmove: (): boolean => true,
       mousemove: (): boolean => [1].includes((e as MouseEvent).buttons)
     };

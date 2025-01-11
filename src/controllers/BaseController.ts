@@ -39,6 +39,7 @@ export class BaseController implements BaseControllerInterface {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer();
+    this.renderer.setPixelRatio(window.devicePixelRatio);
     this.canvas = this.renderer.domElement;
 
     window.addEventListener("resize", this.resize);
@@ -61,5 +62,8 @@ export class BaseController implements BaseControllerInterface {
     this.canvas.style.height = `height: ${clientHeight}px`;
 
     this.renderer.setSize(clientWidth, clientHeight);
+
+    this.camera.aspect = clientWidth / clientHeight;
+    this.camera.updateProjectionMatrix();
   };
 }
