@@ -1,7 +1,13 @@
 import {BaseEntityController, BaseEntityProps} from "./BaseEntityController.ts";
 import {MainFactory} from "../MainFactory.ts";
 
+const Actor = {
+  position: {x: 0, y: 1.6, z: 0}
+}
+
 export class ActorController extends BaseEntityController {
+  actor: ReturnType<typeof MainFactory.getEntity>;
+
   constructor(data: BaseEntityProps) {
     super(data);
 
@@ -9,9 +15,9 @@ export class ActorController extends BaseEntityController {
   }
 
   init(): void {
-    type ActorType = ReturnType<typeof MainFactory.getEntity>
-    const actor: ActorType = MainFactory.getEntity("actor");
-    this.scene.add(actor);
+    this.actor = MainFactory.getEntity("actor");
+    this.actor.position.set(Actor.position.x, Actor.position.y, Actor.position.z);
+    this.scene.add(this.actor);
   }
 
   update(deltaTime: number): void {

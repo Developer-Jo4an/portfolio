@@ -1,9 +1,9 @@
 import {BaseEntityController, BaseEntityProps} from "./BaseEntityController.ts";
 import {MainFactory} from "../MainFactory.ts";
 
-const enum PositionOffset {x = 0, y = 1.5, z = 0}
+const PositionOffset = {x: 0, y: 1.5, z: 0};
 
-const enum PositionVector {x = 4, y = 3, z = 5}
+const PositionVector = {x: 4, y: 3, z: 5};
 
 export class CameraController extends BaseEntityController {
 
@@ -29,13 +29,14 @@ export class CameraController extends BaseEntityController {
     this.controls = new THREEAddons.OrbitControls(this.camera, this.canvas);
     this.controls.maxDistance = 10;
     this.controls.minDistance = 4;
+    this.controls.maxPolarAngle = Math.PI / 3;
     this.controls.mouseButtons = {LEFT: THREE.MOUSE.ROTATE};
 
     this.flying(0);
     this.lookToTarget();
 
-    window.addEventListener("mousemove", this.setOrbitControls);
-    window.addEventListener("touchmove", this.setOrbitControls);
+    this.container.addEventListener("mousemove", this.setOrbitControls);
+    this.container.addEventListener("touchmove", this.setOrbitControls);
   }
 
   setOrbitControls(e: MouseEvent | TouchEvent): void {

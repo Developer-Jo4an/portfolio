@@ -1,58 +1,66 @@
 import React, {createContext, useContext, useEffect, useMemo, useState} from "react";
-import {UniversalModal} from "../modals/UniversalModal.tsx";
+import {UniversalModal} from "../modals/universal/UniversalModal.tsx";
+import {AnimatePresence, motion} from "framer-motion";
 
-//todo: потестить хук
-
-type ModalDataProps = { type: string; props: { isQueue?: boolean }; }
+type ModalDataProps = { type: string; props?: { isQueue?: boolean }; }
 
 type ModalData = ModalDataProps & { id: number }
 
 type CloseModalProps = Partial<Omit<ModalData, "props">>
 
 type UseModalData = {
-  addModal: (modal: ModalData) => void;
+  addModal: (modal: ModalDataProps) => void;
   closeModal: (closeProps: CloseModalProps) => void;
 }
 
-type ModalsDataContext = { useModal: UseModalData } | null
+type ModalsDataContext = { useModal: UseModalData }
 
-const ModalContext: React.Context<ModalsDataContext> = createContext(null);
+export type ModalComponent = { modalId: number }
 
-export const useModalContext = (): ModalsDataContext => useContext(ModalContext);
+const ModalContext: React.Context<ModalsDataContext> = createContext({
+  useModal: {
+    addModal: (modal: ModalDataProps) => {
+    },
+    closeModal: (closeProps: CloseModalProps) => {
+    }
+  }
+});
+
+export const useModal = (): UseModalData => useContext(ModalContext).useModal;
 
 const modalsData: { [modalType: string]: React.FC } = {
   universal: UniversalModal
 };
 
-const addWithPrev = (modal: ModalData): (prev: ModalData[]) => ModalData[] => {
-  return (prev: ModalData[]): ModalData[] => [...prev, modal];
+const addWithPrev = (modal: ModalData) => {
+  return prev => [...prev, modal];
 };
 
-const closeModal = (modal: CloseModalProps): (prev: ModalData[]) => ModalData[] => {
-  return (prev: ModalData[]): ModalData[] => prev.filter(({type, id}) => modal.type !== type && modal.id !== id);
+const closeModal = (modal: CloseModalProps) => {
+  return prev => prev.filter(({type, id}) => modal.type !== type && modal.id !== id);
 };
 
-let counter: number = 0;
+let actualModalId: number = 0;
 
 export const ModalProvider = ({children}: { children: React.ReactNode }) => {
   const [modals, setModal] = useState<ModalData[]>([]);
   const [queue, setQueue] = useState<ModalData[]>([]);
 
-  const useModal: UseModalData = useMemo((): UseModalData => {
+  const useModal: UseModalData = useMemo(() => {
     return {
       addModal: ({type, props}: ModalDataProps): void => {
         if (!modalsData.hasOwnProperty(type)) return;
 
-        const id: number = ++counter;
+        const id: number = ++actualModalId;
 
-        if (!props.isQueue || !modals.length) {
+        if (!props?.isQueue) {
           setModal(addWithPrev({type, id, props}));
           return;
         }
 
         setQueue(addWithPrev({type, id, props}));
       },
-      closeModal: ({type, id}): void => {
+      closeModal: ({type, id}: CloseModalProps): void => {
         if (!type && !id) return;
 
         const callbacks: { [callbackType: string]: () => void } = {
@@ -82,9 +90,9 @@ export const ModalProvider = ({children}: { children: React.ReactNode }) => {
   useEffect((): void => {
     if (!queue.length || modals.length) return;
 
-    const [modal]: ModalData = queue[0];
+    const [modal]: ModalData = queue;
 
-    setQueue((prev: ModalData[]): ModalData[] => prev.slice(1));
+    setQueue(prev => prev.slice(1));
 
     setModal(addWithPrev(modal));
   }, [queue, modals]);
@@ -92,13 +100,23 @@ export const ModalProvider = ({children}: { children: React.ReactNode }) => {
   return (
     <ModalContext.Provider value={{useModal}}>
       {children}
-      <div className={"modal-area"}>{
-        modals.map((modal: ModalData): React.ReactNode => {
-          const {type, props}: ModalData = modal;
-          const Component: React.FC = modalsData[type];
-          return <Component {...props}/>;
-        })
-      }</div>
+      <div className={"modal-area"}>
+        <AnimatePresence>{
+          modals.map((modal): React.ReactNode => {
+            const {type, props, id} = modal;
+            const ModalComponent: React.FC = modalsData[type];
+            return (<motion.div
+              key={id}
+              animate={{opacity: 1}}
+              exit={{opacity: 0}}
+              initial={{opacity: 0}}
+              transition={{duration: 0.5}}
+            >
+              <ModalComponent modalId={id} {...props}/>
+            </motion.div>);
+          })
+        }</AnimatePresence>
+      </div>
     </ModalContext.Provider>
   );
 };

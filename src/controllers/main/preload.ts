@@ -11,20 +11,22 @@ export type PreloadDataArray = PreloadData[]
 
 const basePath: string = "scenesAssets/";
 
+const createPath = (src: string): string => basePath + src;
+
 export const preloadData: PreloadDataArray = [
   {
-    path: basePath + "gltf/character/character1.gltf",
+    path: createPath("gltf/character/character.gltf"),
     name: "character",
     type: "gltf"
   },
   {
-    path: basePath + "main/floor.jpg",
+    path: createPath("main/floor.jpg"),
     name: "floor",
     type: "texture"
   },
   {
-    path: basePath + "main/background.hdr",
-    name: "background",
-    type: "rgbe"
+    path: createPath("gltf/room/room.gltf"),
+    name: "room",
+    type: "gltf"
   }
 ];

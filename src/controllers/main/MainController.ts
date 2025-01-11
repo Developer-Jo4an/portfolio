@@ -2,15 +2,23 @@ import {BaseController} from "../BaseController.ts";
 import {ActorController} from "./entitiesControllers/ActorController.ts";
 import {CameraController} from "./entitiesControllers/CameraController.ts";
 import {BaseEntityProps} from "./entitiesControllers/BaseEntityController.ts";
-import {AssetsManager} from "../AssetsManager.ts";
+import {LightController} from "./entitiesControllers/LightController.ts";
+import {RoomController} from "./entitiesControllers/RoomController.ts";
 
 type ControllerType = ActorController | CameraController;
 
 export class MainController extends BaseController {
 
-  static CONTROLLERS: [typeof ActorController, typeof CameraController] = [
+  static CONTROLLERS: [
+    typeof ActorController,
+    typeof CameraController,
+    typeof LightController,
+    typeof RoomController
+  ] = [
     ActorController,
-    CameraController
+    CameraController,
+    LightController,
+    RoomController
   ];
 
   frame: number;
@@ -31,18 +39,6 @@ export class MainController extends BaseController {
     const props: BaseEntityProps = {container, canvas, renderer, camera, scene};
 
     this.renderer.outputEncoding = THREE.sRGBEncoding;
-
-    const ambientLight: THREE.AmbientLight = new THREE.AmbientLight(0xffffff, 2);
-
-    const background: THREE.Texture | undefined = AssetsManager.getEntityByName("background", "rgbe");
-
-    if (background) {
-      background.mapping = THREE.EquirectangularReflectionMapping;
-      this.scene.background = background;
-      this.scene.environment = background;
-    }
-
-    this.scene.add(ambientLight);
 
     this.controllers = MainController.CONTROLLERS.map(ControllerClass => new ControllerClass(props)); //TODO: РАЗОБРАТЬСЯ
 

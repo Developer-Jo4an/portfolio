@@ -4,7 +4,7 @@ import {AssetsManager} from "../AssetsManager.ts";
 
 //todo: типизировать
 
-type EntityTypeType = "actor"
+type EntityTypeType = "actor" | "room"
 
 type EntityType = THREE.Group
 
@@ -31,11 +31,20 @@ export class MainFactory extends BaseFactory {
   }
 
   static createActor(type: string): EntityType | void {
-    const actor: THREE.Group | undefined = AssetsManager.getEntityByName("character", "gltf");
+    const actor: EntityType | undefined = AssetsManager.getEntityByName("character", "gltf");
 
     if (actor) {
       actor.name = type;
       return actor;
+    }
+  }
+
+  static createRoom(type: string): EntityType | void {
+    const room: EntityType | undefined = AssetsManager.getEntityByName("room", "gltf");
+
+    if (room) {
+      room.name = type;
+      return room;
     }
   }
 }

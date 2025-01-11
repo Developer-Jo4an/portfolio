@@ -9,7 +9,9 @@ type Wrappers = {
   game: typeof GameWrapper;
 }
 
-export const useScene = (type: SceneType, container: HTMLDivElement | null): {wrapper: GameWrapper | MainWrapper | null} => {
+export const useScene = (type: SceneType, container: HTMLDivElement | null): {
+  wrapper: GameWrapper | MainWrapper | null
+} => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   type WrapperType = InstanceType<Wrappers[SceneType]>;
@@ -47,3 +49,4 @@ export const useScene = (type: SceneType, container: HTMLDivElement | null): {wr
 
   return {wrapper};
 };
+
