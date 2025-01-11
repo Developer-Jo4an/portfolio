@@ -1,29 +1,28 @@
 import {BaseEntityController, BaseEntityProps} from "./BaseEntityController.ts";
-import {MainFactory} from "../MainFactory.ts";
-
-const DirLight = {
-  position: {x: 0, y: 1.5, z: 3},
-  intensity: 2,
-  color: 0xffffff
-};
 
 const AmbLight = {
   color: 0xffffff,
   intensity: 1
 };
 
-const PointLight = {
-  position: {x: 0, y: 3, z: 0},
+const PointLightFirst = {
+  position: {x: 0, y: 5, z: 3},
   color: 0xffffff,
-  intensity: 2,
-  distance: 3
+  intensity: 16,
+  distance: 10
+};
+
+const PointLightSecond = {
+  position: {x: 0, y: 5, z: -3},
+  color: 0xffffff,
+  intensity: 16,
+  distance: 10
 };
 
 export class LightController extends BaseEntityController {
   ambientLight: THREE.AmbientLight;
-  directionalLight: THREE.DirectionalLight;
-  pointLight: THREE.PointLight;
-  target: ReturnType<typeof MainFactory.getEntity>;
+  pointLightFirst: THREE.PointLight;
+  pointLightSecond: THREE.PointLight;
 
   constructor(data: BaseEntityProps) {
     super(data);
@@ -35,15 +34,14 @@ export class LightController extends BaseEntityController {
     this.ambientLight = new THREE.AmbientLight(AmbLight.color, AmbLight.intensity);
     this.scene.add(this.ambientLight);
 
-    this.directionalLight = new THREE.DirectionalLight(DirLight.color, DirLight.intensity);
-    this.target = MainFactory.getEntity("actor");
-    this.directionalLight.target = this.target;
-    this.directionalLight.position.set(DirLight.position.x, DirLight.position.y, DirLight.position.z);
-    this.scene.add(this.directionalLight);
+    this.pointLightFirst = new THREE.PointLight(PointLightFirst.color, PointLightFirst.intensity, PointLightFirst.distance);
+    this.pointLightSecond = new THREE.PointLight(PointLightSecond.color, PointLightSecond.intensity, PointLightSecond.distance);
 
-    this.pointLight = new THREE.PointLight(PointLight.color, PointLight.intensity, PointLight.distance);
-    this.pointLight.position.set(PointLight.position.x, PointLight.position.y, PointLight.position.z);
-    this.scene.add(this.pointLight);
+    this.pointLightFirst.position.set(PointLightFirst.position.x, PointLightFirst.position.y, PointLightFirst.position.z);
+    this.pointLightSecond.position.set(PointLightSecond.position.x, PointLightSecond.position.y, PointLightSecond.position.z);
+
+    this.scene.add(this.pointLightFirst);
+    this.scene.add(this.pointLightSecond);
   }
 
   update(deltaTime: number): void {

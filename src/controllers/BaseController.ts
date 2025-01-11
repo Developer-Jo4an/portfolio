@@ -16,6 +16,7 @@ export interface BaseControllerInterface {
 }
 
 export class BaseController implements BaseControllerInterface {
+  eventBus: THREE.EventDispatcher;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   renderer: THREE.WebGLRenderer;
@@ -66,4 +67,8 @@ export class BaseController implements BaseControllerInterface {
     this.camera.aspect = clientWidth / clientHeight;
     this.camera.updateProjectionMatrix();
   };
+
+  reset(): void {
+    console.log("reset");
+  }
 }

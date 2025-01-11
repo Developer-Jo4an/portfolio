@@ -47,6 +47,12 @@ export const useScene = (type: SceneType, container: HTMLDivElement | null): {
     })();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (wrapper) wrapper.reset();
+    };
+  }, [wrapper]);
+
   return {wrapper};
 };
 
