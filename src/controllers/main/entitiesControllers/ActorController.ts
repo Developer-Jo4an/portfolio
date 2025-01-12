@@ -14,10 +14,6 @@ export class ActorController extends BaseEntityController {
     this.init();
   }
 
-  initSelected() {
-    debugger
-  }
-
   init(): void {
     this.actor = MainFactory.getEntity("actor");
     this.actor.position.set(Actor.position.x, Actor.position.y, Actor.position.z);
