@@ -1,8 +1,12 @@
 import {BaseWrapper} from "../BaseWrapper.ts";
 import {MainController} from "./MainController.ts";
+import {WrapperId} from "../config.ts";
 
-export class MainWrapper extends BaseWrapper<MainController> {
+export default class MainWrapper extends BaseWrapper<typeof MainController> {
+
+  static id: WrapperId = "main";
+
   constructor(container: HTMLDivElement) {
-    super(container, new MainController(container));
+    super({container: container, Class: MainController});
   }
 }

@@ -1,6 +1,9 @@
 import {BaseController} from "../BaseController.ts";
 
 export class GameController extends BaseController {
+
+  static preloadId: string = "game";
+
   static CONTROLLERS: [] = [];
 
   frame: number;

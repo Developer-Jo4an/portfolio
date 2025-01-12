@@ -1,7 +1,8 @@
 import React, {useMemo, useRef} from "react";
 import Button from "../baseComponents/button/Button.tsx";
+import {StateControls, useStateControls} from "../../hooks/useStateControls.ts";
 import {useScene} from "../../hooks/useScene.ts";
-import {useStateControls} from "../../hooks/useStateControls.ts";
+import Loader from "../baseComponents/loader/Loader.tsx";
 
 const mainMenuCopyright = {
   optionsButtons: [
@@ -25,9 +26,19 @@ const mainMenuCopyright = {
 
 const MainMenu = () => {
   const sceneRef = useRef<HTMLDivElement | null>(null);
-  const {setState} = useStateControls();
+  const {setState}: StateControls = useStateControls();
 
   const {optionsButtons, playButton} = mainMenuCopyright;
+
+  const {wrapper} = useScene({
+    container: sceneRef,
+    wrapperType: "main",
+    stateMachine: {
+      init: {availableStates: ["playing"], isDefault: true},
+      playing: {availableStates: [""]}
+    },
+    reducers: {}
+  });
 
   const buttonCallbacks = useMemo(
     (): { [key: string]: () => void } => ({
@@ -42,8 +53,6 @@ const MainMenu = () => {
       }
     }),
     []);
-
-  useScene("main", sceneRef.current);
 
   return (
     <div className={"main-menu"}>
@@ -65,6 +74,8 @@ const MainMenu = () => {
       >
         <img src={playButton.img} alt={playButton.alt}/>
       </Button>
+
+      <Loader isVisible={!wrapper}/>
     </div>
   );
 };

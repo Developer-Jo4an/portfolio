@@ -2,7 +2,7 @@ import {useAppDispatch} from "../stateManager/stateManagerHooks.ts";
 import appSlice from "../stateManager/slices/appSlice.ts";
 import {useMemo} from "react";
 
-interface StateControls {
+export interface StateControls {
   setState: (newState: string) => void;
   nextState: () => void;
 }

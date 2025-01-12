@@ -1,8 +1,12 @@
 import {BaseWrapper} from "../BaseWrapper.ts";
 import {GameController} from "./GameController.ts";
+import {WrapperId} from "../config.ts";
 
-export class GameWrapper extends BaseWrapper<GameController> {
+export default class GameWrapper extends BaseWrapper<typeof GameController> {
+
+  static id: WrapperId = "game";
+
   constructor(container: HTMLDivElement) {
-    super(container, new GameController(container));
+    super({container: container, Class: GameController});
   }
 }

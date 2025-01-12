@@ -1,14 +1,14 @@
-import {BaseEntityController} from "./BaseEntityController.ts";
-import {MainFactory} from "../MainFactory.ts";
+import {BaseEntityController, BaseEntityProps} from "./BaseEntityController.ts";
+import {EntityType, MainFactory} from "../MainFactory.ts";
 
 const Room = {
   rotation: {x: 0, y: 3.9, z: 0}
 };
 
 export class RoomController extends BaseEntityController {
-  room: ReturnType<typeof MainFactory.getEntity>;
+  room: EntityType;
 
-  constructor(data: BaseEntityController) {
+  constructor(data: BaseEntityProps) {
     super(data);
 
     this.init();

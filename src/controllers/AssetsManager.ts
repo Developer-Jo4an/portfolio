@@ -1,74 +1,94 @@
-import {AssetType, PreloadData, PreloadDataArray} from "./main/preload.ts";
+import {LoadersType, PreloadData, PreloadDataArray} from "./preload.ts";
 
-type EntityType = THREE.Texture | THREE.Group
+const loadersLibrary: { [loaderName: LoadersType]: new (...args: any[]) => any } = {
+  threeTexture: THREE.TextureLoader,
+  threeGltf: THREEAddons.GLTFLoader,
+  threeRgbe: THREEAddons.RGBELoader
+};
 
-type LoadersType = THREE.TextureLoader | THREEAddons.GLTFLoader | THREEAddons.RGBELoader
+//todo: подумать над any
+
+type LoaderReturnValueType = any
+
+type LoaderType = typeof loadersLibrary[keyof typeof loadersLibrary]
+
+type LibraryItemType = { [key: string]: LoaderReturnValueType }
 
 export class AssetsManager {
-  private static library: { [propName: AssetType]: { [key: string]: EntityType } } = {};
+  private static library: { [libraryPart: LoadersType]: LibraryItemType } = {};
 
-  private static loaders: { [propName: AssetType]: LoadersType } = {};
+  private static loaders: { [loaderType: LoadersType]: LoaderType } = {};
 
-  static setToLibrary(type: AssetType, value: EntityType, name: string): void {
-    if (!AssetsManager.library.hasOwnProperty(type))
-      AssetsManager.library[type] = {[name]: value};
 
-    AssetsManager.library[type][name] = value;
+  public static setToLibrary(type: LoadersType, value: LoaderReturnValueType, name: string): void {
+    let subLibrary: LibraryItemType | undefined = AssetsManager.library[type];
+
+    if (!subLibrary)
+      subLibrary = AssetsManager.library[type] = {};
+
+    if (subLibrary.hasOwnProperty(name))
+      throw new Error("Entity with the same name already exists in the library");
+
+    subLibrary[name] = value;
   }
 
-  static getEntityByName(name: string, type: AssetType): EntityType | undefined {
-    return AssetsManager.library[type][name];
+
+  public static getEntityByName(name: string, type: LoadersType): LoaderReturnValueType | never {
+    const item: LoaderReturnValueType = AssetsManager.library[type][name];
+
+    if (!item)
+      throw new Error("Entity with the same name not found in the library");
+
+    return item;
   }
 
-  static async loadEntity({path, name, type, params}: PreloadData): Promise<EntityType> {
+
+  public static async loadEntity(
+    {path, name, type}: PreloadData & { type: LoadersType }):
+    Promise<LoaderReturnValueType | never> {
+    const necessaryLoader: LoaderType = AssetsManager.loaders[type]; //todo: взять из массива классы
+
+    if (!necessaryLoader)
+      throw new Error("Loader not found");
+
     const loaderLogic: {
-      texture: () => Promise<THREE.Texture>,
-      rgbe: () => Promise<THREE.Texture>,
-      gltf: () => Promise<THREE.Group>
+      [key: LoadersType]: () => Promise<LoaderReturnValueType>
     } = {
-      texture: async () => {
-        return AssetsManager.loaders[type].load(path);
+      threeTexture: async () => {
+        return necessaryLoader.load(path);
       },
-      rgbe: async () => {
-        return AssetsManager.loaders[type].load(path);
+      threeRgbe: async () => {
+        return necessaryLoader.load(path);
       },
-      gltf: async () => {
+      threeGltf: async () => {
         const splitPath: string[] = path.split("/");
         const fileName: string = splitPath[splitPath.length - 1];
         const basePath: string = `${splitPath.slice(0, splitPath.length - 1).join("/")}/`;
-        AssetsManager.loaders[type].setPath(basePath);
+
+        necessaryLoader.setPath(basePath);
+
         return new Promise((res): void => {
-          AssetsManager.loaders[type].load(fileName, gltf => res(gltf.scene));
+          necessaryLoader.load(fileName, gltf => res(gltf.scene));
         });
       }
     };
 
-    const entity: EntityType = await loaderLogic[type]();
+    const entity: LoaderReturnValueType = await loaderLogic[type]();
 
     AssetsManager.setToLibrary(type, entity, name);
 
     return entity;
   }
 
-  static createLoaders(preloadData: PreloadDataArray): void {
-    const loaders: { [propName: string]: LoadersType } = {};
 
-    const Loaders: {
-      texture: typeof THREE.TextureLoader,
-      gltf: typeof THREEAddons.GLTFLoader,
-      rgbe: typeof THREEAddons.RGBELoader
-    } = {
-      texture: THREE.TextureLoader,
-      gltf: THREEAddons.GLTFLoader,
-      rgbe: THREEAddons.RGBELoader
-    };
+  public static createLoaders(preloadData: PreloadDataArray): void {
+    preloadData.forEach(({type}: PreloadData) => {
+      if (AssetsManager.hasOwnProperty(type)) return;
 
-    preloadData.forEach((data: PreloadData) => {
-      if (loaders.hasOwnProperty(data.type)) return;
+      if (!loadersLibrary.hasOwnProperty(type))
+        throw new Error("Loader not found");
 
-      loaders[data.type] = new Loaders[data.type]();
+      AssetsManager.loaders[type] = new loadersLibrary[type]();
     });
-
-    AssetsManager.loaders = loaders;
   }
 }

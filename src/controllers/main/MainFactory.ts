@@ -4,47 +4,32 @@ import {AssetsManager} from "../AssetsManager.ts";
 
 //todo: типизировать
 
-type EntityTypeType = "actor" | "room"
-
-type EntityType = THREE.Group
+export type EntityType = THREE.Group
 
 export class MainFactory extends BaseFactory {
-  static getEntity(type: EntityTypeType): EntityType | never {
+  public static getEntity(type: "actor" | "room"): EntityType | never {
 
-    const entity: undefined | EntityType = MainFactory.getFromLibraryByType<EntityType>(type);
+    const entity: EntityType | undefined = MainFactory.getFromLibraryByType<EntityType>(type);
 
-    if (entity)
-      return entity;
+    if (entity) return entity;
 
-    const necessaryCallback: Function | undefined = MainFactory[`create${upperFirstLetter(type)}`];
+    const necessaryCallback: (() => EntityType) | undefined = MainFactory[`create${upperFirstLetter(type)}`];
 
     if (!necessaryCallback)
-      throw new Error("Entity not found");
+      throw new Error("Create entity callback not found");
 
-    type EntityElType = ReturnType<typeof necessaryCallback>;
+    const element: EntityType = necessaryCallback();
 
-    const element: EntityElType = necessaryCallback(type);
+    MainFactory.setToLibrary<EntityType>(type, element);
 
-    MainFactory.setToLibrary<EntityElType>(type, element);
-
-    return MainFactory.getFromLibraryByType<EntityElType>(type);
+    return element;
   }
 
-  static createActor(type: string): EntityType | void {
-    const actor: EntityType | undefined = AssetsManager.getEntityByName("character", "gltf");
-
-    if (actor) {
-      actor.name = type;
-      return actor;
-    }
+  private static createActor(): EntityType {
+    return AssetsManager.getEntityByName("character", "threeGltf");
   }
 
-  static createRoom(type: string): EntityType | void {
-    const room: EntityType | undefined = AssetsManager.getEntityByName("room", "gltf");
-
-    if (room) {
-      room.name = type;
-      return room;
-    }
+  private static createRoom(): EntityType {
+    return AssetsManager.getEntityByName("room", "threeGltf");
   }
 }

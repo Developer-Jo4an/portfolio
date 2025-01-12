@@ -15,6 +15,48 @@ body {
   cursor: pointer;
 }
 
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loader__spinner {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  border-radius: 50%;
+  box-shadow: -10px 8px 0 18px inset #fff;
+  animation: rotate-animation 2s ease-in infinite alternate;
+}
+.loader__spinner:before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  bottom: 16px;
+  background: #942dfd;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  animation: scale-animation 1s ease-in infinite alternate;
+}
+@keyframes rotate-animation {
+  100% {
+    transform: rotate(750deg);
+  }
+}
+@keyframes scale-animation {
+  100% {
+    transform: scale(0.5) translateY(5px);
+  }
+}
+
 .main-menu {
   position: fixed;
   top: 0;

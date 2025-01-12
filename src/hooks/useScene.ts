@@ -1,59 +1,69 @@
+import {createWrapperPath, WrapperId} from "../controllers/config.ts";
 import {useEffect, useState} from "react";
-import {MainWrapper} from "../controllers/main/MainWrapper.ts";
-import {GameWrapper} from "../controllers/game/GameWrapper.ts";
+import {StateMachineProp} from "../stateMachine/stateMachine.tsx";
 
-type SceneType = "main" | "game"
-
-type Wrappers = {
-  main: typeof MainWrapper;
-  game: typeof GameWrapper;
+interface useSceneProps {
+  container: { current: HTMLDivElement | null };
+  wrapperType: WrapperId;
+  stateMachine: { [stateName: string]: StateMachineProp };
+  reducers?: {
+    [stateName: string]: { [callbackKey: "before" | "after"]: () => Promise<void> | void }
+  };
 }
 
-export const useScene = (type: SceneType, container: HTMLDivElement | null): {
-  wrapper: GameWrapper | MainWrapper | null
-} => {
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+type useSceneRequiredType = { wrapper: InstanceType<new () => any> | null } | never
 
-  type WrapperType = InstanceType<Wrappers[SceneType]>;
+export const useScene = ({container, wrapperType, stateMachine, reducers}: useSceneProps): useSceneRequiredType => {
+  const [wrapper, setWrapper] = useState(null);
+  const [containerState, setContainerState] = useState<HTMLDivElement | null>(null);
+  const [state, setState] = useState<string | undefined>(Object.entries(stateMachine).find(([_, state]) => state.isDefault)?.[0]);
 
-  const [wrapper, setWrapper] = useState<WrapperType | null>(null);
+  if (!state) // явный вылет из приложения, если не указан state по умолчанию
+    throw new Error("No default state");
+
 
   useEffect((): void => {
-    if (!isLoaded || !container) return;
+    if (!wrapper) return;
 
-    const wrappers: Wrappers = {
-      main: MainWrapper,
-      game: GameWrapper
-    };
+    // todo: смена стейта внутри контроллера будет тольео через eventBus и через специальный метод,
+    // todo который изменит тут state(в хуке) и у нас отработает данный useEffect еще раз
 
-    const WrapperCls: Wrappers[SceneType] = wrappers[type];
-
-    const wrapperInstance: WrapperType = new WrapperCls(container);
-
-    setWrapper(wrapperInstance);
-  }, [type, isLoaded, container]);
-
-  //todo: declare
-  useEffect((): void => {
     (async (): Promise<void> => {
-      const THREE = await import("three");
-      const THREEAddons = await import("three/addons");
-      const GSAP = await import("gsap");
-
-      window.THREEAddons = THREEAddons;
-      window.THREE = THREE;
-      window.GSAP = GSAP.gsap;
-
-      setIsLoaded(true);
+      await reducers?.[state]?.before?.();
+      wrapper.eventBus.dispatchEvent({type: "state:change", state});
+      reducers?.[state]?.after?.();
     })();
-  }, []);
+  }, [wrapper, state]);
 
-  useEffect(() => {
-    return () => {
-      if (wrapper) wrapper.reset();
+  useEffect((): undefined | (() => void) => {
+    if (!containerState) return;
+
+    let wrapperInstance;
+
+    (async (): Promise<void> => {
+      window.THREE = await import("three");
+      window.THREEAddons = await import("three/addons");
+      window.GSAP = (await import("gsap")).gsap;
+
+      const WrapperClass = (await import(createWrapperPath(wrapperType))).default;
+
+      const wrapper = new WrapperClass(containerState);
+
+      await wrapper.initController();
+
+      setWrapper(wrapperInstance = wrapper);
+    })();
+
+    return (): void => {
+      if (wrapperInstance) wrapperInstance.reset();
     };
-  }, [wrapper]);
+  }, [containerState]);
+
+  useEffect((): void => {
+    setContainerState(container.current);
+  }, [container.current]);
 
   return {wrapper};
 };
+
 

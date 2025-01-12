@@ -2,9 +2,12 @@
 @import "zeroing";
 // default
 @import "mixins";
+// constants
+@import "constants";
 
 // default components
 @import "../components/baseComponents/button/Button";
+@import "../components/baseComponents/loader/Loader";
 
 // components
 @import "../components/app/App";
@@ -12,6 +15,7 @@
 @import "../components/game/Game";
 @import "../components/modalProvider/ModalProvider";
 @import "../components/modals/universal/UniversalModal";
+
 
 
 

@@ -1,14 +1,17 @@
-import {PreloadData, preloadData} from "./main/preload.ts";
-import {AssetsManager} from "./AssetsManager.ts";
-
-export interface BaseControllerInterface {
+interface BaseControllerInterface {
+  eventBus: THREE.EventDispatcher;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   renderer: THREE.WebGLRenderer;
   canvas: HTMLCanvasElement;
   container: HTMLDivElement;
+  state: string;
 
-  init(): Promise<void>;
+  init(): void;
+
+  setEventBus(eventBus: THREE.EventDispatcher): void;
+
+  setState({state}: { state: string }): void;
 
   update(deltaTime: number): void;
 
@@ -16,27 +19,26 @@ export interface BaseControllerInterface {
 }
 
 export class BaseController implements BaseControllerInterface {
-  eventBus: THREE.EventDispatcher;
-  scene: THREE.Scene;
-  camera: THREE.PerspectiveCamera;
-  renderer: THREE.WebGLRenderer;
-  canvas: HTMLCanvasElement;
-  container: HTMLDivElement;
+
+  public static preloadId: string = "none";
+
+  protected eventBus: THREE.EventDispatcher;
+  protected scene: THREE.Scene;
+  protected camera: THREE.PerspectiveCamera;
+  protected renderer: THREE.WebGLRenderer;
+  protected canvas: HTMLCanvasElement;
+  protected container: HTMLDivElement;
+  protected state: string;
 
   constructor(container: HTMLDivElement) {
     this.resize = this.resize.bind(this);
+    this.setState = this.setState.bind(this);
     this.update = this.update.bind(this);
 
     this.container = container;
-
-    this.init();
   }
 
-  async init(): Promise<void> {
-    AssetsManager.createLoaders(preloadData);
-
-    await Promise.all(preloadData.map((obj: PreloadData) => AssetsManager.loadEntity(obj)));
-
+  public init(): void {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer();
@@ -45,16 +47,28 @@ export class BaseController implements BaseControllerInterface {
 
     window.addEventListener("resize", this.resize);
 
-    this.resize();
-
     this.container.appendChild(this.canvas);
+
+    this.resize();
   }
 
-  update(deltaTime: number): void {
-    this.renderer.render(this.scene, this.camera);
-  };
+  public setEventBus(eventBus: THREE.EventDispatcher): void {
+    this.eventBus = eventBus;
 
-  resize(): void {
+    this.eventBus.addEventListener("state:change", this.setState);
+  }
+
+  private setState({state}): void {
+    this.state = state;
+
+    this[`${state}Selected`]?.();
+  }
+
+  protected update(deltaTime: number): void {
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  private resize(): void {
     const {clientWidth, clientHeight}: { clientWidth: number, clientHeight: number } = this.container;
 
     this.canvas.width = clientWidth;
@@ -66,9 +80,9 @@ export class BaseController implements BaseControllerInterface {
 
     this.camera.aspect = clientWidth / clientHeight;
     this.camera.updateProjectionMatrix();
-  };
+  }
 
   reset(): void {
-    console.log("reset");
+    //todo: reset
   }
 }

@@ -1,17 +1,21 @@
 import {BaseEntityController, BaseEntityProps} from "./BaseEntityController.ts";
-import {MainFactory} from "../MainFactory.ts";
+import {EntityType, MainFactory} from "../MainFactory.ts";
 
 const Actor = {
   position: {x: 0, y: 1.6, z: 0}
 }
 
 export class ActorController extends BaseEntityController {
-  actor: ReturnType<typeof MainFactory.getEntity>;
+  actor: EntityType;
 
   constructor(data: BaseEntityProps) {
     super(data);
 
     this.init();
+  }
+
+  initSelected() {
+    debugger
   }
 
   init(): void {
