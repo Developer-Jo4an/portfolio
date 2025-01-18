@@ -1,28 +1,23 @@
 import {BaseEntityController, BaseEntityProps} from "./BaseEntityController.ts";
 
-const AmbLight = {
+const AmbLight = {color: 0xffffff, intensity: 1};
+
+const SpotLight = {
   color: 0xffffff,
-  intensity: 1
+  intensity: 2,
+  distance: 500,
+  angle: Math.PI / 5,
+  penumbra: 0,
+  decay: 1,
+  power: 750,
+  position: {x: 0, y: 50, z: 80},
+  target: {x: 0, y: 2.65, z: 15}
 };
 
-const PointLightFirst = {
-  position: {x: 0, y: 5, z: 3},
-  color: 0xffffff,
-  intensity: 16,
-  distance: 10
-};
-
-const PointLightSecond = {
-  position: {x: 0, y: 5, z: -3},
-  color: 0xffffff,
-  intensity: 16,
-  distance: 10
-};
-
+//pos: 0 - 50 - 80: target - 0 - 2.65 - 15
 export class LightController extends BaseEntityController {
   ambientLight: THREE.AmbientLight;
-  pointLightFirst: THREE.PointLight;
-  pointLightSecond: THREE.PointLight;
+  spotLight: THREE.SpotLight;
 
   constructor(data: BaseEntityProps) {
     super(data);
@@ -34,16 +29,35 @@ export class LightController extends BaseEntityController {
     this.ambientLight = new THREE.AmbientLight(AmbLight.color, AmbLight.intensity);
     this.scene.add(this.ambientLight);
 
-    this.pointLightFirst = new THREE.PointLight(PointLightFirst.color, PointLightFirst.intensity, PointLightFirst.distance);
-    this.pointLightSecond = new THREE.PointLight(PointLightSecond.color, PointLightSecond.intensity, PointLightSecond.distance);
+    this.spotLight = new THREE.SpotLight(
+      SpotLight.color,
+      SpotLight.intensity,
+      SpotLight.distance,
+      SpotLight.angle,
+      SpotLight.penumbra,
+      SpotLight.decay
+    );
 
-    this.pointLightFirst.position.set(PointLightFirst.position.x, PointLightFirst.position.y, PointLightFirst.position.z);
-    this.pointLightSecond.position.set(PointLightSecond.position.x, PointLightSecond.position.y, PointLightSecond.position.z);
+    this.spotLight.position.set(SpotLight.position.x, SpotLight.position.y, SpotLight.position.z);
+    const target = new THREE.Object3D();
+    target.position.set(SpotLight.target.x, SpotLight.target.y, SpotLight.target.z);
+    this.spotLight.power = SpotLight.power;
+    this.spotLight.castShadow = true;
+    this.spotLight.shadow.needsUpdate = true;
+    this.spotLight.shadow.mapSize.width = 1024;
+    this.spotLight.shadow.mapSize.height = 1024;
+    this.spotLight.target = target;
+    this.scene.add(this.spotLight);
+    this.scene.add(this.spotLight.target);
+    this.spotLightHelper = new THREE.SpotLightHelper(this.spotLight);
+    this.scene.add(this.spotLightHelper);
+    target.updateMatrixWorld();
+    this.spotLight.updateMatrixWorld();
+    this.spotLightHelper.update();
 
-    this.scene.add(this.pointLightFirst);
-    this.scene.add(this.pointLightSecond);
   }
 
   update(deltaTime: number): void {
+    this.spotLightHelper.update();
   }
 }

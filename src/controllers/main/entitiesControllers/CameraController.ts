@@ -1,9 +1,9 @@
 import {BaseEntityController, BaseEntityProps} from "./BaseEntityController.ts";
 import {MainFactory} from "../MainFactory.ts";
 
-const PositionOffset = {x: 0, y: 1.5, z: 0};
+const PositionOffset = {x: 0, y: 3, z: 0};
 
-const PositionVector = {x: 4, y: 3, z: 5};
+const PositionVector = {x: 15, y: 12, z: 20};
 
 export class CameraController extends BaseEntityController {
 
@@ -27,8 +27,8 @@ export class CameraController extends BaseEntityController {
     this.target = MainFactory.getEntity("actor");
 
     this.controls = new THREEAddons.OrbitControls(this.camera, this.canvas);
-    this.controls.maxDistance = 10;
-    this.controls.minDistance = 4;
+    this.controls.maxDistance = 150;
+    this.controls.minDistance = 10;
     this.controls.maxPolarAngle = Math.PI / 3;
     this.controls.mouseButtons = {LEFT: THREE.MOUSE.ROTATE};
 
@@ -70,7 +70,7 @@ export class CameraController extends BaseEntityController {
     this.camera.position.set(xPosition, position.y, zPosition);
 
     if (!GSAP.getTweensOf(position).length) {
-      const timeline: ReturnType<typeof GSAP.timeline> = GSAP.timeline({
+      const timeline = GSAP.timeline({
         repeat: -1,
         onStart: (): void => {
           position.y = PositionVector.y;
@@ -99,13 +99,15 @@ export class CameraController extends BaseEntityController {
   lookToTarget(): void {
     const {x, y, z}: THREE.Vector3 = this.target.position;
 
+    this.controls.target.set(x, y, z);
+
     this.camera.lookAt(x + PositionOffset.x, y + PositionOffset.y, z + PositionOffset.z);
   }
 
   update(deltaTime: number): void {
-    this.controls.update();
-
     this.lookToTarget();
+
+    this.controls.update();
 
     if (this.isFlyingCamera)
       this.flying(deltaTime);
