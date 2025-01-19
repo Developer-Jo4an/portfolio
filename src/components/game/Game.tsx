@@ -4,13 +4,19 @@ import {useScene} from "../../hooks/useScene.ts";
 const Game = () => {
   const gameContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const {wrapper} = useScene("game", gameContainerRef.current);
-
-  console.log(wrapper);
+  const {wrapper} = useScene({
+    container: gameContainerRef,
+    wrapperType: "game",
+    stateMachine: {
+      init: {availableStates: ["playing"], isDefault: true},
+      playing: {availableStates: [""]}
+    },
+    reducers: {}
+  });
 
   return (
     <div className={"game"}>
-      <div ref={gameContainerRef} className={"game__container"}></div>
+      <div ref={gameContainerRef} className={"game__container"}/>
     </div>
   );
 };

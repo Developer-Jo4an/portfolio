@@ -1,9 +1,13 @@
 import {BaseEntityController, BaseEntityProps} from "./BaseEntityController.ts";
 import {EntityType, MainFactory} from "../MainFactory.ts";
+import {Constants} from "../../../constants/scene/constants.ts";
+import {utils} from "../../../constants/scene/utils.ts";
+import {Object3D} from "three";
 
-const Room = {
-  position: {x: 0, y: -5, z: 0},
-  rotation: {x: 0, y: 3.9, z: 0}
+const constants: Constants = {
+  transformation: {
+    position: {x: 0, y: -7, z: 0}
+  }
 };
 
 export class RoomController extends BaseEntityController {
@@ -17,14 +21,9 @@ export class RoomController extends BaseEntityController {
 
   init(): void {
     this.room = MainFactory.getEntity("room");
-    console.log(this.room);
-    this.room.traverse(obj => {
-      if (obj?.isMesh) {
-        obj.name === "room" ? obj.receiveShadow = true : obj.castShadow = true;
-      }
-    });
-    this.room.rotation.set(Room.rotation.x, Room.rotation.y, Room.rotation.z);
-    this.room.position.set(Room.position.x, Room.position.y, Room.position.z);
+    this.room.isNotDestroyed = true;
+    this.room.traverse((obj: Object3D) => obj.name !== "room" && (obj.castShadow = true));
+    utils.setTransformation<EntityType>(constants.transformation, this.room);
     this.scene.add(this.room);
   }
 

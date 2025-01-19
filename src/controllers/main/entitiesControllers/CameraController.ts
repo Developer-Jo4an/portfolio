@@ -1,13 +1,20 @@
 import {BaseEntityController, BaseEntityProps} from "./BaseEntityController.ts";
-import {MainFactory} from "../MainFactory.ts";
+import {EntityType, MainFactory} from "../MainFactory.ts";
+import {Constants} from "../../../constants/scene/constants.ts";
 
-const PositionOffset = {x: 0, y: 3, z: 0};
-
-const PositionVector = {x: 15, y: 12, z: 20};
+const constants: Constants = {
+  lookOffset: {x: 0, y: 3, z: 0},
+  flyOffset: {x: 16, y: 8, z: 12.5},
+  controls: {
+    maxDistance: 22,
+    minDistance: 14,
+    maxPolarAngle: Math.PI / 3
+  }
+};
 
 export class CameraController extends BaseEntityController {
 
-  target: ReturnType<typeof MainFactory.getEntity>;
+  target: EntityType;
 
   flyingProgress: number = 0.25;
 
@@ -24,12 +31,14 @@ export class CameraController extends BaseEntityController {
   }
 
   init(): void {
+    const {controls} = constants;
+
     this.target = MainFactory.getEntity("actor");
 
     this.controls = new THREEAddons.OrbitControls(this.camera, this.canvas);
-    this.controls.maxDistance = 150;
-    this.controls.minDistance = 10;
-    this.controls.maxPolarAngle = Math.PI / 3;
+    this.controls.maxDistance = controls.maxDistance;
+    this.controls.minDistance = controls.minDistance;
+    this.controls.maxPolarAngle = controls.maxPolarAngle;
     this.controls.mouseButtons = {LEFT: THREE.MOUSE.ROTATE};
 
     this.flying(0);
@@ -55,6 +64,8 @@ export class CameraController extends BaseEntityController {
   }
 
   flying(delta: number): void {
+    const {flyOffset} = constants;
+
     this.flyingProgress = ((): number => {
       const newFlyingProgress: number = this.flyingProgress + (delta / 60000);
       return newFlyingProgress > 1 ? 0 : newFlyingProgress;
@@ -64,50 +75,49 @@ export class CameraController extends BaseEntityController {
 
     const angle: number = this.flyingProgress * (Math.PI * 2);
 
-    const zPosition: number = Math.sin(angle) * PositionVector.z;
-    const xPosition: number = Math.cos(angle) * PositionVector.x;
+    const zPosition: number = Math.sin(angle) * flyOffset.z;
+    const xPosition: number = Math.cos(angle) * flyOffset.x;
 
     this.camera.position.set(xPosition, position.y, zPosition);
 
     if (!GSAP.getTweensOf(position).length) {
-      const timeline = GSAP.timeline({
+      const timeline: ReturnType<typeof GSAP.timeline> = GSAP.timeline({
         repeat: -1,
         onStart: (): void => {
-          position.y = PositionVector.y;
+          position.y = flyOffset.y;
         }
       });
 
       timeline
-        .to(position, {
-          duration: 3,
-          ease: "sine.inOut",
-          y: PositionVector.y + 0.5
-        })
-        .to(position, {
-          duration: 6,
-          ease: "sine.inOut",
-          y: PositionVector.y - 0.5
-        })
-        .to(position, {
-          duration: 3,
-          ease: "sine.inOut",
-          y: PositionVector.y
-        });
+      .to(position, {
+        duration: 3,
+        ease: "sine.inOut",
+        y: flyOffset.y + 0.5
+      })
+      .to(position, {
+        duration: 6,
+        ease: "sine.inOut",
+        y: flyOffset.y - 0.5
+      })
+      .to(position, {
+        duration: 3,
+        ease: "sine.inOut",
+        y: flyOffset.y
+      });
     }
   }
 
   lookToTarget(): void {
     const {x, y, z}: THREE.Vector3 = this.target.position;
+    const {lookOffset} = constants;
 
-    this.controls.target.set(x, y, z);
-
-    this.camera.lookAt(x + PositionOffset.x, y + PositionOffset.y, z + PositionOffset.z);
+    this.camera.lookAt(x + lookOffset.x, y + lookOffset.y, z + lookOffset.z);
   }
 
   update(deltaTime: number): void {
-    this.lookToTarget();
-
     this.controls.update();
+
+    this.lookToTarget();
 
     if (this.isFlyingCamera)
       this.flying(deltaTime);

@@ -68,7 +68,10 @@ export class AssetsManager {
         necessaryLoader.setPath(basePath);
 
         return new Promise((res): void => {
-          necessaryLoader.load(fileName, gltf => res(gltf.scene));
+          necessaryLoader.load(fileName, gltf => {
+            gltf.scene.name = name;
+            res(gltf.scene);
+          });
         });
       }
     };

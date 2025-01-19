@@ -2,8 +2,6 @@ import {BaseFactory} from "../BaseFactory.ts";
 import {upperFirstLetter} from "../../utils/register.ts";
 import {AssetsManager} from "../AssetsManager.ts";
 
-//todo: типизировать
-
 export type EntityType = THREE.Group
 
 export class MainFactory extends BaseFactory {

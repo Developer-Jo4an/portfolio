@@ -4,7 +4,7 @@ export interface BaseEntityProps {
   renderer: THREE.WebGLRenderer,
   camera: THREE.PerspectiveCamera,
   container: HTMLDivElement,
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
 }
 
 interface BaseEntityInterface extends BaseEntityProps {
@@ -50,6 +50,10 @@ export class BaseEntityController implements BaseEntityInterface {
   }
 
   update(deltaTime: number): void {
+
+  }
+
+  reset(): void {
 
   }
 }

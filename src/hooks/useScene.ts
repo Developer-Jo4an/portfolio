@@ -53,11 +53,13 @@ export const useScene = ({container, wrapperType, stateMachine, reducers}: useSc
 
       setWrapper(wrapperInstance = wrapper);
     })();
-
-    return (): void => {
-      if (wrapperInstance) wrapperInstance.reset();
-    };
   }, [containerState]);
+
+  useEffect((): () => void => {
+    return (): void => {
+      wrapper && wrapper.reset();
+    };
+  }, [wrapper]);
 
   useEffect((): void => {
     setContainerState(container.current);

@@ -1,4 +1,4 @@
-interface BaseControllerInterface {
+interface BaseControllerInterface<ControllerType> {
   eventBus: THREE.EventDispatcher;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
@@ -6,6 +6,7 @@ interface BaseControllerInterface {
   canvas: HTMLCanvasElement;
   container: HTMLDivElement;
   state: string;
+  controllers: ControllerType[]
 
   init(): void;
 
@@ -16,11 +17,15 @@ interface BaseControllerInterface {
   update(deltaTime: number): void;
 
   resize(): void;
+
+  reset(): void;
 }
 
-export class BaseController implements BaseControllerInterface {
+export class BaseController<ControllerType> implements BaseControllerInterface<ControllerType> {
 
   public static preloadId: string = "none";
+
+  readonly static MAX_MS: number = 35;
 
   protected eventBus: THREE.EventDispatcher;
   protected scene: THREE.Scene;
@@ -29,6 +34,7 @@ export class BaseController implements BaseControllerInterface {
   protected canvas: HTMLCanvasElement;
   protected container: HTMLDivElement;
   protected state: string;
+  protected controllers: ControllerType[]
 
   constructor(container: HTMLDivElement) {
     this.resize = this.resize.bind(this);
@@ -45,6 +51,8 @@ export class BaseController implements BaseControllerInterface {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.canvas = this.renderer.domElement;
 
     window.addEventListener("resize", this.resize);
@@ -67,7 +75,8 @@ export class BaseController implements BaseControllerInterface {
   }
 
   protected update(deltaTime: number): void {
-    this.renderer.render(this.scene, this.camera);
+    if (this.renderer)
+      this.renderer.render(this.scene, this.camera);
   }
 
   private resize(): void {
@@ -85,6 +94,23 @@ export class BaseController implements BaseControllerInterface {
   }
 
   reset(): void {
-    //todo: reset
+    try {
+      this.scene.traverse(obj => {
+        if (obj === this.scene || obj?.isNotDestroyed) return;
+
+        if (obj.material) {
+          if (Array.isArray(obj.material))
+            obj.material.forEach(material => material.dispose());
+          else
+            obj.material.dispose();
+        }
+
+        if (obj.geometry)
+          obj.geometry.dispose();
+
+        this.scene.remove(obj);
+      });
+    } catch (e) {
+    }
   }
 }

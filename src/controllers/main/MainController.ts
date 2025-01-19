@@ -11,11 +11,11 @@ type ControllerType =
   typeof LightController |
   typeof RoomController;
 
-export class MainController extends BaseController {
+type ControllerInstanceType = InstanceType<ControllerType>
+
+export class MainController extends BaseController<ControllerInstanceType> {
 
   public static preloadId: string = "main";
-
-  readonly static MAX_MS: number = 35;
 
   private static CONTROLLERS: ControllerType[] = [
     ActorController,
@@ -37,13 +37,13 @@ export class MainController extends BaseController {
   init(): void {
     super.init();
 
-    const {container, eventBus, canvas, renderer, camera, scene} = this;
+    this.renderer.outputEncoding = THREE.sRGBEncoding;
 
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    const {container, eventBus, canvas, renderer, camera, scene} = this;
 
     const props: BaseEntityProps = {scene, renderer, camera, container, canvas, eventBus};
 
-    this.controllers = MainController.CONTROLLERS.map((ControllerClass: ControllerType) => new ControllerClass(props)); //TODO: РАЗОБРАТЬСЯ
+    this.controllers = MainController.CONTROLLERS.map((ControllerClass: ControllerType): ControllerInstanceType => new ControllerClass(props));
 
     this.frame = requestAnimationFrame(this.update);
   }
@@ -61,15 +61,23 @@ export class MainController extends BaseController {
 
     this.lastTime = currentTime;
 
-    if (ms > MainController.MAX_MS) {
+    if (ms > BaseController.MAX_MS) {
       this.frame = requestAnimationFrame(this.update);
       return;
     }
 
-    this.controllers.forEach((controller: ControllerType) => controller.update(ms));
+    this.controllers.forEach((controller: ControllerInstanceType) => controller.update(ms));
 
     super.update(deltaTime);
 
     this.frame = requestAnimationFrame(this.update);
+  }
+
+  reset(): void {
+    cancelAnimationFrame(this.frame);
+
+    this.controllers.forEach((controller: ControllerInstanceType) => controller.reset());
+
+    super.reset();
   }
 }

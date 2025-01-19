@@ -1,7 +1,7 @@
 import React from "react";
 import {AnimatePresence, motion} from "framer-motion";
 
-interface LoaderProps {
+interface LoaderProps extends React.HTMLAttributes<HTMLDivElement> {
   isVisible: boolean;
 }
 

@@ -1,5 +1,6 @@
 import React, {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {UniversalModal} from "../modals/universal/UniversalModal.tsx";
+import {GameControlsModal} from "../modals/gameControls/GameControlsModal.tsx";
 import {AnimatePresence, motion} from "framer-motion";
 
 type ModalDataProps = { type: string; props?: { isQueue?: boolean }; }
@@ -8,7 +9,7 @@ type ModalData = ModalDataProps & { id: number }
 
 type CloseModalProps = Partial<Omit<ModalData, "props">>
 
-type UseModalData = {
+export type UseModalData = {
   addModal: (modal: ModalDataProps) => void;
   closeModal: (closeProps: CloseModalProps) => void;
 }
@@ -29,7 +30,8 @@ const ModalContext: React.Context<ModalsDataContext> = createContext({
 export const useModal = (): UseModalData => useContext(ModalContext).useModal;
 
 const modalsData: { [modalType: string]: React.FC } = {
-  universal: UniversalModal
+  universal: UniversalModal,
+  gameControls: GameControlsModal
 };
 
 const addWithPrev = (modal: ModalData) => {

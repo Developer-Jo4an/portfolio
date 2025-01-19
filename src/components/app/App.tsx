@@ -9,7 +9,11 @@ const App = () => {
   const {state}: InitialAppState = useAppSelector(useAppSliceData);
   const ActiveComponent: React.FC = statesComponents[state];
 
-  useStateCallback();
+  const necessaryCallback = useStateCallback();
+
+  const stateEnter = ({opacity: onEnter}: { opacity: number }): void => {
+    onEnter && necessaryCallback?.();
+  };
 
   return (
     <div className={"app"}>
@@ -20,6 +24,7 @@ const App = () => {
           exit={{opacity: 0}}
           initial={{opacity: 0}}
           transition={{duration: 0.5}}
+          onAnimationStart={stateEnter}
         >
           <ActiveComponent/>
         </motion.div>

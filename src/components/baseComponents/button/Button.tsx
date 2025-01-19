@@ -5,7 +5,7 @@ interface ClassNamesProps {
   [key: string]: boolean;
 }
 
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string,
   classNames?: ClassNamesProps,
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void,
@@ -23,7 +23,8 @@ const Button = (
     disabled,
     timeout,
     disposable,
-    children
+    children,
+    ...props
   }: ButtonProps
 ) => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
@@ -63,6 +64,7 @@ const Button = (
       disabled={disabled || isDisabled}
       className={classnames(...classes)}
       onClick={onClick}
+      {...props}
     >
       {children}
     </button>
