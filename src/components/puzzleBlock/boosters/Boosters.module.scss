@@ -1,0 +1,56 @@
+.boosters {
+  position: absolute;
+  bottom: 76px;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 24px;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 80px;
+    height: 80px;
+
+    transition: .3s transform ease-in-out, .3s background-color ease-in-out;
+
+    box-shadow: 0 0 16px salmon;
+
+    border-radius: 20px;
+
+    user-select: none;
+
+    &_active {
+      background-color: salmon;
+      transform: scale(1.1);
+    }
+  }
+
+  &__item-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 72px;
+    height: 72px;
+
+    transition: opacity 0.3s ease-in-out;
+
+    svg {
+      user-select: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &_disable {
+      opacity: 0.5;
+    }
+  }
+}

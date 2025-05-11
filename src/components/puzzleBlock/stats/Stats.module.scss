@@ -1,0 +1,29 @@
+.stats {
+  position: absolute;
+  left: 50%;
+  top: 74px;
+
+  transform: translateX(-50%);
+
+  &__container {
+    display: flex;
+    gap: 16px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__item-image {
+    width: 48px;
+    height: 48px;
+  }
+
+  &__item-value {
+    font-size: 32px;
+    color: white;
+    font-weight: 700;
+  }
+}

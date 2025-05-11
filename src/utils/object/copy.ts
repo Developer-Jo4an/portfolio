@@ -1,0 +1,1 @@
+export const copy = <ObjectType>(object: ObjectType): ObjectType => JSON.parse(JSON.stringify(object));

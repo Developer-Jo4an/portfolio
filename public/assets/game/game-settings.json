@@ -1,0 +1,265 @@
+{
+  "controls": {},
+  "assetsSettings": {
+    "assetsUrl": "/assets",
+    "materialPrefix": "mat",
+    "texturePrefix": "tex",
+    "replaceMaterials": []
+  },
+  "createBefore": {},
+  "preload": [
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "cell",
+      "path": "assets/textures/",
+      "fileName": "cell.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "hammer",
+      "path": "assets/textures/",
+      "fileName": "hammer.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "square-base-blue",
+      "path": "assets/textures/",
+      "fileName": "square-base-blue.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "square-base-green",
+      "path": "assets/textures/",
+      "fileName": "square-base-green.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "square-base-red",
+      "path": "assets/textures/",
+      "fileName": "square-base-red.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "square-base-yellow",
+      "path": "assets/textures/",
+      "fileName": "square-base-yellow.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "square-base-purple",
+      "path": "assets/textures/",
+      "fileName": "square-base-purple.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "ice",
+      "path": "assets/textures/",
+      "fileName": "ice.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "gem-1",
+      "path": "assets/textures/",
+      "fileName": "gem-1.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "gem-2",
+      "path": "assets/textures/",
+      "fileName": "gem-2.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "gem-3",
+      "path": "assets/textures/",
+      "fileName": "gem-3.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "gem-4",
+      "path": "assets/textures/",
+      "fileName": "gem-4.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "gem-5",
+      "path": "assets/textures/",
+      "fileName": "gem-5.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "crystal",
+      "path": "assets/textures/",
+      "fileName": "crystal.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "lightning",
+      "path": "assets/textures/",
+      "fileName": "lightning.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "star",
+      "path": "assets/textures/",
+      "fileName": "star.png"
+    },
+    {
+      "subtype": "pixijs",
+      "type": "texture",
+      "name": "shadow",
+      "path": "assets/textures/",
+      "fileName": "shadow.png"
+    }
+  ],
+  "sceneOverrides": {},
+  "mainSceneSettings": {
+    "generator": {
+      "spawnCount": 3
+    },
+    "area": {
+      "marginTop": 230,
+      "marginSide": 35,
+      "marginBottom": 144,
+      "background": {
+        "offset": 16,
+        "borderRadius": 24,
+        "color": "0x2F085A"
+      }
+    },
+    "spawnArea": {
+      "distanceBetweenArea": 50,
+      "spawnSettings": {
+        "directions": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            -1
+          ],
+          [
+            -1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            -1,
+            -1
+          ],
+          [
+            1,
+            -1
+          ],
+          [
+            -1,
+            1
+          ]
+        ],
+        "ranges": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              5,
+              10
+            ],
+            [
+              2,
+              3,
+              4
+            ]
+          ],
+          [
+            [
+              11,
+              40
+            ],
+            [
+              4,
+              5,
+              6
+            ]
+          ],
+          [
+            [
+              41,
+              999
+            ],
+            [
+              7
+            ]
+          ]
+        ]
+      }
+    },
+    "cell": {
+      "mods": {
+        "standard": {
+          "color": "0xffffff"
+        },
+        "possibleStep": {
+          "color": "0xff0000"
+        }
+      }
+    },
+    "square": {},
+    "hammer": {
+      "size": {
+        "width": 115,
+        "height": 115
+      },
+      "breakableCondition": {
+        "byShape": true,
+        "byColor": false
+      },
+      "breakableElements": [
+        "squareGroup"
+      ]
+    },
+    "chances": {
+      "gem": 0.2,
+      "blocker": 0.2,
+      "helper": 0.2
+    },
+    "additionallyElements": {
+      "star": {
+        "min": 0,
+        "max": 3
+      }
+    }
+  }
+}
