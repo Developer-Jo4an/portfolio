@@ -1,3 +1,4 @@
+
 class EventDispatcher {
 
   addEventListener( type, listener ) {

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {JSX} from "react";
 import type {ModalItem} from "../../../providers/modalProvider/types.ts";
 import styles from "./GameEnd.module.scss";

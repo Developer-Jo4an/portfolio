@@ -1,3 +1,4 @@
+
 import BaseDecorator from "../BaseDecorator.ts";
 
 export default class State extends BaseDecorator {

@@ -1,6 +1,6 @@
 import BaseGameController from "./BaseGameController.ts";
-import {utils} from "../helpers/GameUtils";
-import {gameFactory} from "../helpers/GameFactory";
+import {utils} from "../helpers/GameUtils.ts";
+import {gameFactory} from "../helpers/GameFactory.ts";
 import {upperFirst} from "../../../../utils/text/format.ts";
 
 export default class GameBoostersController extends BaseGameController {

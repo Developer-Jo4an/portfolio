@@ -1,3 +1,4 @@
+
 export function visibilityParameters() {
   let hidden, visibilityChange;
   if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support

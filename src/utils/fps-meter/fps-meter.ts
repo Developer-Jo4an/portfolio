@@ -1,3 +1,4 @@
+
 import {visibilityParameters} from "./visibilityParameters";
 
 export default class FPSMeter {

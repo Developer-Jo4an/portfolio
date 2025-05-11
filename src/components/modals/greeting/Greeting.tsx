@@ -1,18 +1,21 @@
+// @ts-nocheck
+
 import type {ModalItem} from "../../../providers/modalProvider/types.ts";
-import {JSX, useEffect} from "react";
+import {JSX} from "react";
 import {useModal} from "../../../providers/modalProvider/ModalProvider.tsx";
+import {copyright} from "./copyright.ts";
+import styles from "./Greeting.module.scss";
 
-export const Greeting = ({id, type, props}: ModalItem): JSX.Element => {
+const {text, title, button: {text: buttonText}} = copyright;
 
+export const Greeting = ({id}: ModalItem): JSX.Element => {
   const {closeModal} = useModal();
 
-  useEffect((): void => {
-    setTimeout((): void => {
-      closeModal(id);
-    }, 1500);
-  }, []);
-
   return (
-    <div>Hello{id}{type}</div>
+    <div className={styles.greeting}>
+      <div className={styles.greeting__title}>{title}</div>
+      <div className={styles.greeting__container}>{text}</div>
+      <button className={styles.greeting__button} onClick={() => closeModal(id)}>{buttonText}</button>
+    </div>
   );
 };

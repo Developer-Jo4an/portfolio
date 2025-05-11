@@ -2,8 +2,8 @@ import BaseHelper from "./BaseHelper.ts";
 import {utils} from "../../helpers/GameUtils.ts";
 import {gameFactory} from "../../helpers/GameFactory.ts";
 import AssetsManager from "../../../../../utils/loader/plugins/AssetsManager.ts";
-import {shuffle} from "gsap/gsap-core";
 import {gameTimelineSpaceId} from "../../../../../constants/puzzleBlock.ts";
+import {shuffle} from "../../../../../utils/random/shuffle.ts";
 
 export default class Lightning extends BaseHelper {
   constructor(data, type) {

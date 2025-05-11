@@ -1,3 +1,4 @@
+
 import BaseLoader from "../BaseLoader.ts";
 
 export default class TextureLoader extends BaseLoader {

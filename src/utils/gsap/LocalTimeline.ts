@@ -1,3 +1,4 @@
+
 export default class LocalTimeline {
   static statuses = {
     playing: "playing",

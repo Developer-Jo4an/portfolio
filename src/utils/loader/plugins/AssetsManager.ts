@@ -1,3 +1,4 @@
+
 export default class AssetsManager {
 
   static lib = {};

@@ -1,4 +1,4 @@
-import BaseCellItem from "../BaseCellItem";
+import BaseCellItem from "../BaseCellItem.ts";
 import {utils} from "../../../helpers/GameUtils.ts";
 import {gameTimelineSpaceId} from "../../../../../../constants/puzzleBlock.ts";
 

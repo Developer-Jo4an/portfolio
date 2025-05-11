@@ -1,7 +1,7 @@
 import BaseGameController from "./BaseGameController.ts";
-import {GAME_SIZE} from "../GameController";
-import {utils} from "../helpers/GameUtils";
-import {gameFactory} from "../helpers/GameFactory";
+import {GAME_SIZE} from "../GameController.ts";
+import {utils} from "../helpers/GameUtils.ts";
+import {gameFactory} from "../helpers/GameFactory.ts";
 import {shuffle} from "../../../../utils/random/shuffle.ts";
 
 export default class GameSpawnAreaController extends BaseGameController {

@@ -1,4 +1,4 @@
-import {pixi} from "../../../utils/scene/utils/import/import-pixi";
+import {pixi} from "../../../../utils/imports/pixiGame/import-pixi.ts";
 
 export async function customGsap(spaceId) {
   const {default: gsap} = await import("gsap");

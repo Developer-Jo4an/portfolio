@@ -1,6 +1,6 @@
 import BaseGameController from "./BaseGameController.ts";
-import {gameFactory} from "../helpers/GameFactory";
-import {utils} from "../helpers/GameUtils";
+import {gameFactory} from "../helpers/GameFactory.ts";
+import {utils} from "../helpers/GameUtils.ts";
 import {gameTimelineSpaceId, stateMachine} from "../../../../constants/puzzleBlock.ts";
 import {minmax} from "../../../../utils/minmax/minmax.ts";
 

@@ -1,11 +1,13 @@
+
 import State from "../decorators/state/State.ts";
 import {EventDispatcher} from "../events/EventDispatcher.ts";
 import SceneController from "../containers/SceneController.ts";
 import {CustomData} from "../data/CustomData.ts";
+import CanvasResize from "../decorators/resize/CanvasResize.ts";
 
 export default class BaseWrapper {
 
-  decorators = [State];
+  decorators = [State, CanvasResize];
 
   eventBus = new EventDispatcher();
 

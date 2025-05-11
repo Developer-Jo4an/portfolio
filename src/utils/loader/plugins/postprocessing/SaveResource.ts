@@ -1,3 +1,4 @@
+
 import AssetsManager from "../AssetsManager.ts";
 
 export default class SaveResource {

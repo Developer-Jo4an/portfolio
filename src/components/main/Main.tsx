@@ -1,9 +1,11 @@
+// @ts-nocheck
+
 import styles from "./Main.module.scss";
 import {JSX, useLayoutEffect} from "react";
 import {useLoadAssetToMemory} from "../../hooks/useLoadAssetToMemory.ts";
 import {useAppCallbacks} from "../../hooks/useAppCallbacks.ts";
 import {copyright} from "./copyright.ts";
-import {useModal} from "../../providers/modalProvider/ModalProvider.tsx";
+import {useGreeting} from "../../hooks/useGreeting.ts";
 
 const {preload, games} = copyright;
 
@@ -11,6 +13,8 @@ export const Main = (): JSX.Element => {
   const {loadedAssets, load} = useLoadAssetToMemory();
 
   const {setState} = useAppCallbacks();
+
+  useGreeting();
 
   useLayoutEffect((): void => {
     load(preload);

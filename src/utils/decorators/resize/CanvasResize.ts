@@ -1,3 +1,4 @@
+
 import Resize from "./Resize.ts";
 
 export default class CanvasResize extends Resize {

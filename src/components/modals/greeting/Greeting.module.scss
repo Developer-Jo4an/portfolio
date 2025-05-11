@@ -1,0 +1,48 @@
+.greeting {
+  width: 300px;
+
+  border-radius: 20px;
+
+  padding: 20px;
+
+  background-color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 10px;
+
+  &__title {
+    font-size: 32px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  &__container {
+    text-align: center;
+
+    font-size: 24px;
+  }
+
+  &__button {
+    background-color: violet;
+
+    border: 0;
+
+    font-size: 24px;
+
+    color: white;
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    transition: .3s ease-in-out transform;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

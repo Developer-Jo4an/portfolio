@@ -1,3 +1,4 @@
+
 import PIXI from "./pixi-global";
 
 window.PIXI = PIXI;

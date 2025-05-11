@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import type {ReactNode} from "react";
 import {createContext, JSX, useContext, useState} from "react";
 import styles from "./ModalProvider.module.scss";

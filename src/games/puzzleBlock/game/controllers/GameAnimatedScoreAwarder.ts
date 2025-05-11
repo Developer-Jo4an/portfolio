@@ -1,6 +1,6 @@
 import BaseGameController from "./BaseGameController.ts";
-import {gameFactory} from "../helpers/GameFactory";
-import {GAME_SIZE} from "../GameController";
+import {gameFactory} from "../helpers/GameFactory.ts";
+import {GAME_SIZE} from "../GameController.ts";
 import {gameTimelineSpaceId} from "../../../../constants/puzzleBlock.ts";
 import {shuffle} from "../../../../utils/random/shuffle.ts";
 
